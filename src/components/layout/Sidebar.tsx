@@ -4,51 +4,82 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from '../ui/ThemeToggle';
+import { Home, Star, Clock } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: 'dashboard-icon' },
-    { name: 'Reputation', href: '/reputation', icon: 'reputation-icon' },
-    { name: 'Statistics', href: '/statistics', icon: 'statistics-icon' },
+    { 
+      name: 'Dashboard', 
+      href: '/dashboard', 
+      icon: <Home size={20} />, 
+      soon: false 
+    },
+    { 
+      name: 'Reputation', 
+      href: '/reputation', 
+      icon: <Star size={20} />, 
+      soon: true 
+    },
+    { 
+      name: 'Statistics', 
+      href: '/statistics', 
+      icon: <Clock size={20} />, 
+      soon: true 
+    },
   ];
 
   return (
-    <div className="h-screen w-32 bg-white dark:bg-gray-900 flex flex-col justify-between p-4 border-r border-gray-200 dark:border-gray-800">
-      <div className="space-y-8">
-        {/* Logo */}
-        <div className="flex justify-center">
-          <Image src="/images/logo-black.png" alt="HumanXO Logo" width={40} height={40} />
-        </div>
-        
-        {/* Navigation */}
-        <nav className="space-y-4">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link 
-                key={item.name}
-                href={item.href}
-                className={`flex flex-col items-center p-2 rounded-lg text-xs ${
-                  isActive 
-                    ? 'bg-orange-100 text-orange-500 dark:bg-gray-800 dark:text-orange-400' 
-                    : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'
-                }`}
-              >
-                <div className="h-5 w-5 mb-1">
-                  {/* Replace with actual icons */}
-                  <span className="block h-full w-full bg-current opacity-70" />
-                </div>
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+    <div className="h-screen w-60 everett-font bg-white dark:bg-gray-800 flex flex-col p-4 border-r border-gray-100 dark:border-gray-700">
+      <div className="flex justify-left ml-10 mb-6">
+        {mounted && (
+          <Link href="/" className="flex items-center">
+            <Image 
+              src={theme === 'dark' ? "/images/logo-black.png" : "/images/logo-black.png"} 
+              alt="Logo" 
+              width={60} 
+              height={60} 
+            />
+          </Link>
+        )}
       </div>
       
-      {/* Theme Toggle */}
-      <div className="flex justify-center">
+      {/* Navigation */}
+      <nav className="flex flex-col space-y-2">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link 
+              key={item.name}
+              href={item.href}
+              className={`flex items-center p-4 rounded-lg ${
+                isActive 
+                  ? 'bg-orange-50 text-orange-500 dark:bg-gray-700 dark:text-orange-400' 
+                  : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+            >
+              <div className={`mr-3 ${isActive ? 'text-orange-500 dark:text-orange-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                {item.icon}
+              </div>
+              <span className="text-lg font-medium">{item.name}</span>
+              {item.soon && (
+                <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">SOON</span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+      
+      <div className="mt-auto flex justify-center">
         <ThemeToggle />
       </div>
     </div>

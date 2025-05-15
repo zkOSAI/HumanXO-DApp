@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@solana/wallet-adapter-react": "^0.15.38",
+    "@solana/wallet-adapter-react-ui": "^0.9.38",
+    "@solana/wallet-adapter-wallets": "^0.19.36",
     "@vercel/analytics": "^1.5.0",
     "lucide-react": "^0.503.0",
     "mongodb": "^6.16.0",

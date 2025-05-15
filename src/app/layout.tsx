@@ -1,9 +1,8 @@
-// src/app/layout.tsx
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Sidebar from '../components/layout/Sidebar';
 import { ThemeProvider } from '../providers/ThemeProvider';
-import { WalletProvider } from '../providers/WalletProvider';
+import WalletContextProvider from '../providers/WalletContextProvider';
 import type { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,15 +20,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <WalletProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <WalletContextProvider>
             <div className="flex h-screen">
               <Sidebar />
-              <main className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-auto">
+              <main className="flex-1 everett-font bg-gray-50 dark:bg-gray-900 overflow-auto">
                 {children}
               </main>
             </div>
-          </WalletProvider>
+          </WalletContextProvider>
         </ThemeProvider>
       </body>
     </html>

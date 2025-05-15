@@ -1,15 +1,115 @@
-import WalletConnect from '../../components/wallet/walletConnect';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+
 
 export default function Dashboard() {
-  return (
-    <div className="h-full bg-gray-900">
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="flex justify-end mb-6">
-          <button className="bg-orange-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors">
-            Disconnect Wallet
-          </button>
-        </div>
+
+  const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const router = useRouter();
+
+  const isPhantomInstalled = () => {
+    // @ts-ignore
+    return typeof window !== 'undefined' && window.phantom?.solana;
+  };
+
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        // @ts-ignore
+        const provider = window.phantom?.solana;
+        if (provider?.isPhantom) {
+          const connected = provider.isConnected;
+          setConnected(connected);
+        }
+      } catch (error) {
+        console.error("Error checking connection:", error);
+      }
+    };
+    
+    checkConnection();
+  }, []);
+
+  const connectPhantomWallet = async () => {
+    try {
+      setConnecting(true);
+      
+      if (!isPhantomInstalled()) {
+        window.open('https://phantom.app/', '_blank');
+        setConnecting(false);
+        return;
+      }
+      
+      // @ts-ignore
+      const provider = window.phantom?.solana;
+      
+      if (provider?.isPhantom) {
+        try {
+          if (provider.isConnected) {
+            await provider.disconnect();
+          }
+          
+          const response = await provider.connect();
+          setConnected(true);
+          
+        } catch (err) {
+          console.error("Connection error:", err);
+        }
+      }
+    } catch (error) {
+      console.error("Error connecting to Phantom:", error);
+    } finally {
+      setConnecting(false);
+    }
+  };
+  
+  const disconnectWallet = async () => {
+    try {
+      // @ts-ignore
+      const provider = window.phantom?.solana;
+      
+      if (provider?.isPhantom) {
+        await provider.disconnect();
         
+        setConnected(false);
+        
+        setTimeout(() => {
+          if (provider.publicKey) {
+            console.log("Wallet still has a public key after disconnect");
+          } else {
+            console.log("Wallet successfully disconnected");
+          }
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Error disconnecting:", error);
+    }
+  };
+
+  return (
+    <div className="h-full bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-6xl flex flex-col mx-auto p-6 ">
+        <div className="flex justify-end mb-12">
+          {connected ? (
+            <button 
+              className="bg-orange-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors"
+              onClick={disconnectWallet}
+            >
+              Disconnect Wallet
+            </button>
+          ) : (
+            <button 
+              className="bg-orange-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors"
+              onClick={connectPhantomWallet}
+              disabled={connecting}
+            >
+              {connecting ? 'Connecting...' : 'Connect Wallet'}
+            </button>
+          )}
+        </div>
         {/* Main layout */}
         <div className="flex flex-col gap-6">
           {/* Balance/Rewards Card - Full Width */}
@@ -60,9 +160,9 @@ export default function Dashboard() {
             </div>
             
             {/* Browser Extension Card - Narrower */}
-            <div className="w-full md:w-1/3 bg-red-100 rounded-2xl p-4 text-center">
-              <div className="flex flex-col items-center text-black">
-                <div className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center mb-4 relative">
+            <div className="w-full md:w-1/3 bg-red-100 dark:bg-red-900 rounded-2xl p-4 text-center">
+              <div className="flex flex-col items-center text-black dark:text-white">
+                <div className="h-12 w-12 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center mb-4 relative">
                   <div className="h-4 w-4 bg-orange-500 rounded-full" />
                 </div>
                 
@@ -71,7 +171,7 @@ export default function Dashboard() {
                   to earn and claim your rewards, import and sync your HumanXO private key.
                 </p>
                 
-                <button className="max-w-3/4 bg-white text-orange-500 text-sm border border-gray-200 text-gray-800 font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-colors">
+                <button className="max-w-3/4 bg-white dark:bg-gray-800 text-orange-500 text-sm border border-gray-200 dark:border-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   Import Private Key
                 </button>
               </div>
