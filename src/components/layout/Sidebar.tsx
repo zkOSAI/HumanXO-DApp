@@ -1,89 +1,111 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { Home, Menu, X, Star, BarChart2 } from 'lucide-react';
+import Image from 'next/image';
 import ThemeToggle from '../ui/ThemeToggle';
-import { Home, Star, Clock } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
 
-const Sidebar = () => {
+interface SidebarProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export default function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname();
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
-  const navItems = [
-    { 
-      name: 'Dashboard', 
-      href: '/dashboard', 
-      icon: <Home size={20} />, 
-      soon: false 
-    },
-    { 
-      name: 'Reputation', 
-      href: '/reputation', 
-      icon: <Star size={20} />, 
-      soon: true 
-    },
-    { 
-      name: 'Statistics', 
-      href: '/statistics', 
-      icon: <Clock size={20} />, 
-      soon: true 
-    },
+
+  const navigation = [
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Reputation', href: '/reputation', icon: Star },
+    { name: 'Statistics', href: '/statistics', icon: BarChart2 },
   ];
 
   return (
-    <div className="h-screen w-60 everett-font bg-white dark:bg-gray-800 flex flex-col p-4 border-r border-gray-100 dark:border-gray-700">
-      <div className="flex justify-left ml-10 mb-6">
-        {mounted && (
-          <Link href="/" className="flex items-center">
-            <Image 
-              src={theme === 'dark' ? "/images/logo-black.png" : "/images/logo-black.png"} 
-              alt="Logo" 
-              width={60} 
-              height={60} 
-            />
+    <>
+      {/* Mobile menu button */}
+      {isMobile && (
+        <button
+          onClick={() => setOpen(!open)}
+          className="fixed top-4 left-4 z-50 bg-orange-500 text-white p-2 rounded-md"
+        >
+          {open ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      )}
+
+      {/* Sidebar */}
+      <div 
+        className={`bg-gray-800 text-white flex flex-col transition-all duration-300 ease-in-out ${
+          isMobile 
+            ? `fixed top-0 left-0 h-full z-40 ${open ? 'w-64 opacity-100' : 'w-0 opacity-0'}`
+            : 'w-64'
+        }`}
+      >
+        {/* Logo */}
+        <div className="p-6 flex justify-center">
+          {/* Replace with your actual logo image */}
+          <Link href={"/"} className="flex items-center">
+            <div className="relative h-12 w-14">
+              <Image 
+                src="/images/logo-black.png" 
+                alt="HumanXO Logo" 
+                fill
+                className="object-contain"
+              />
+            </div>
           </Link>
-        )}
-      </div>
-      
-      {/* Navigation */}
-      <nav className="flex flex-col space-y-2">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link 
-              key={item.name}
-              href={item.href}
-              className={`flex items-center p-4 rounded-lg ${
-                isActive 
-                  ? 'bg-orange-50 text-orange-500 dark:bg-gray-700 dark:text-orange-400' 
-                  : 'text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-            >
-              <div className={`mr-3 ${isActive ? 'text-orange-500 dark:text-orange-400' : 'text-gray-400 dark:text-gray-500'}`}>
-                {item.icon}
-              </div>
-              <span className="text-lg font-medium">{item.name}</span>
-              {item.soon && (
-                <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">SOON</span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-      
-      <div className="mt-auto flex justify-center">
+          
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 mt-8 px-4">
+          <ul className="space-y-2">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              const IconComponent = item.icon;
+              
+              return (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-orange-500 text-white'
+                        : 'hover:bg-gray-700'
+                    }`}
+                    onClick={() => isMobile && setOpen(false)}
+                  >
+                    <IconComponent size={18} className="mr-3" />
+                    <span>{item.name}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Bottom section */}
         <ThemeToggle />
       </div>
-    </div>
+      
+      {/* Overlay for mobile */}
+      {isMobile && open && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setOpen(false)}
+        />
+      )}
+    </>
   );
-};
-
-export default Sidebar;
+}

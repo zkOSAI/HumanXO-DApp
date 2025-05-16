@@ -1,8 +1,8 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Sidebar from '../components/layout/Sidebar';
 import { ThemeProvider } from '../providers/ThemeProvider';
 import WalletContextProvider from '../providers/WalletContextProvider';
+import LayoutWrapper from '../components/layout/LayoutWrapper';
 import type { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -22,12 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <WalletContextProvider>
-            <div className="flex h-screen">
-              <Sidebar />
-              <main className="flex-1 everett-font bg-gray-50 dark:bg-gray-900 overflow-auto">
-                {children}
-              </main>
-            </div>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
           </WalletContextProvider>
         </ThemeProvider>
       </body>

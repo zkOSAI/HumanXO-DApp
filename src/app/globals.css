@@ -1,31 +1,22 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=DynaPuff&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=TWKEverett&display=swap');
 
 @font-face {
-  font-family: 'DynaPuff';
-  src: url('/fonts/DynaPuff.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'TWKEverett';
+  src: url('/fonts/TWKEverett.otf') format('truetype');
+  font-weight: 400;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'TWKEverett';
   src: url('/fonts/TWKEverett.otf') format('truetype');
-  font-weight: normal;
+  font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 :root {
-  /* Your default theme */
   --background: white;
   --foreground: black;
 }
@@ -89,4 +80,15 @@ text {
   background-image: url('/images/bg-forest.png');
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+@media (max-width: 767px) {
+  .hidden-mobile {
+    display: none;
+  }
+}
+
+
+.no-transition * {
+  transition: none !important;
 }
