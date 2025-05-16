@@ -112,7 +112,7 @@ export default function Home() {
                 <img src="/images/human-logo.png" width={30} height={30} alt="" />
               </div>
               <p className="text-sm text-gray-800 dark:text-gray-200">
-                Passively verify you're human, build reputation in the HumanXO ecosystem, and earn rewards.
+                Passively verify you&apos;re human, build reputation in the HumanXO ecosystem, and earn rewards.
               </p>
               <div className="mt-2">
                 <button className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-orange-600 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">

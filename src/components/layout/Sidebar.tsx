@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Menu, X, Star, BarChart2 } from 'lucide-react';
+import { Home, X, Star, BarChart2 } from 'lucide-react';
 import Image from 'next/image';
 import ThemeToggle from '../ui/ThemeToggle';
 

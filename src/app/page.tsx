@@ -20,14 +20,14 @@ export default function Home() {
   }, []);
 
   const isPhantomInstalled = () => {
-    // @ts-ignore
+    // @ts-expect-error: third-party type issue
     return typeof window !== 'undefined' && window.phantom?.solana;
   };
 
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // @ts-ignore
+        // @ts-expect-error: third-party type issue
         const provider = window.phantom?.solana;
         if (provider?.isPhantom) {
           const connected = provider.isConnected;
@@ -50,7 +50,7 @@ export default function Home() {
         setConnecting(false);
         return;
       }
-      // @ts-ignore
+      // @ts-expect-error: third-party type issue
       const provider = window.phantom?.solana;
       
       if (provider?.isPhantom) {
@@ -59,7 +59,7 @@ export default function Home() {
             await provider.disconnect();
           }
           
-          const response = await provider.connect();
+         // const response = await provider.connect();
           setConnected(true);
           router.push('/dashboard');
         } catch (err) {
@@ -75,7 +75,7 @@ export default function Home() {
   
   const disconnectWallet = async () => {
     try {
-      // @ts-ignore
+      // @ts-expect-error: third-party type issue
       const provider = window.phantom?.solana;
       
       if (provider?.isPhantom) {
@@ -179,7 +179,7 @@ export default function Home() {
                   <img src="/images/human-logo.png" width={30} height={30} alt="" />
                 </div>
                 <p className="text-xs md:text-sm text-gray-800 dark:text-gray-200">
-                  Passively verify you're human, build reputation in the HumanXO ecosystem, and earn rewards.
+                  Passively verify you are human, build reputation in the HumanXO ecosystem, and earn rewards.
                 </p>
                 <div className="mt-2">
                   <button className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-orange-600 font-medium py-2 md:py-3 px-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">

@@ -21,7 +21,7 @@ export default function WalletContextProvider({ children }: { children: ReactNod
   );
 
   const onError = useCallback(
-    (error: any) => {
+    (error: Error) => {
       console.error(error);
     },
     []

@@ -18,14 +18,14 @@ export default function Dashboard() {
   }, []);
 
   const isPhantomInstalled = () => {
-    // @ts-ignore
+    // @ts-expect-error: third-party type issue
     return typeof window !== 'undefined' && window.phantom?.solana;
   };
 
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // @ts-ignore
+        // @ts-expect-error: third-party type issue
         const provider = window.phantom?.solana;
         if (provider?.isPhantom) {
           const connected = provider.isConnected;
@@ -48,7 +48,7 @@ export default function Dashboard() {
         setConnecting(false);
         return;
       }
-      // @ts-ignore
+      // @ts-expect-error: third-party type issue
       const provider = window.phantom?.solana;
       
       if (provider?.isPhantom) {
@@ -57,7 +57,7 @@ export default function Dashboard() {
             await provider.disconnect();
           }
           
-          const response = await provider.connect();
+          //const response = await provider.connect();
           setConnected(true);
           
         } catch (err) {
@@ -73,7 +73,7 @@ export default function Dashboard() {
   
   const disconnectWallet = async () => {
     try {
-      // @ts-ignore
+      // @ts-expect-error: third-party type issue
       const provider = window.phantom?.solana;
       
       if (provider?.isPhantom) {
