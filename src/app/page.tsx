@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import the router
 
 export default function Home() {
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -59,7 +61,7 @@ export default function Home() {
           
           const response = await provider.connect();
           setConnected(true);
-          
+          router.push('/dashboard');
         } catch (err) {
           console.error("Connection error:", err);
         }
