@@ -1,7 +1,6 @@
 // src/queries/user/getUser.ts
 import axios from 'axios';
-import { useWallet } from '@solana/wallet-adapter-react';
-
+//  @typescript-eslint/no-explicit-any
 export const getUser = async (publicKey: any) => {
     const data = { publicKey };
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API!}/api/users/info`, data, {

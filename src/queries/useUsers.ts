@@ -6,7 +6,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 export const useUsers = () => {
     const { publicKey } = useWallet();
-    const { data, error, isLoading } = useQuery({
+    const { data} = useQuery({
         queryKey: ['users', publicKey],
         queryFn: () => getUser(publicKey),
         refetchInterval: 4000,  // optional: poll every 10s
