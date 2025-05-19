@@ -14,6 +14,49 @@ export default function Dashboard() {
   console.log(data);
   //console.log("query");
 
+  const [extensionInstalled, setExtensionInstalled] = useState(false);
+  useEffect(() => {
+    // Only run this in the browser, not during SSR
+    if (typeof window !== 'undefined') {
+      // Initial check
+      const checkAttribute = () => {
+        const attributeValue = document.documentElement.getAttribute('human-extension-installed');
+        console.log("check extension::", attributeValue);
+        setExtensionInstalled(attributeValue === 'true');
+      };
+      
+      // Check immediately
+      checkAttribute();
+      
+      // Set up a MutationObserver to watch for attribute changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.type === 'attributes' && 
+            mutation.attributeName === 'human-extension-installed'
+          ) {
+            checkAttribute();
+          }
+        });
+      });
+      
+      // Start observing
+      observer.observe(document.documentElement, { 
+        attributes: true,
+        attributeFilter: ['human-extension-installed']
+      });
+      
+      // Also check periodically as a fallback
+      const intervalId = setInterval(checkAttribute, 1000);
+      
+      // Cleanup when component unmounts
+      return () => {
+        observer.disconnect();
+        clearInterval(intervalId);
+      };
+    }
+  }, []);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -69,7 +112,7 @@ export default function Dashboard() {
                 </svg>
                 <p className="text-sm font-medium">Dashboard</p>
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-2">{data.reward} ZKOS</h3>
+              <h3 className="text-2xl md:text-3xl font-bold mb-2">{data?.reward} ZKOS</h3>
 
               <button onClick={() => claim()} className="bg-white text-orange-500 font-medium py-1 md:py-2 px-4 md:px-6 rounded-lg hover:bg-orange-50 transition-colors mb-2 md:mb-4">
                 Claim Rewards
@@ -77,7 +120,7 @@ export default function Dashboard() {
 
               <div className="text-xs opacity-80">
                 <p className="mb-1">Total Rewards Earned All Time</p>
-                <p className="text-lg md:text-xl font-medium">{data.score} points</p>
+                <p className="text-lg md:text-xl font-medium">{data?.score} points</p>
               </div>
             </div>
           </div>
@@ -120,6 +163,12 @@ export default function Dashboard() {
                 {/* <button onClick={() => importPrv()} className="max-w-3/4 bg-white dark:bg-gray-800 text-orange-500 text-xs md:text-sm border border-gray-200 dark:border-gray-700 font-medium py-1 md:py-2 px-3 md:px-4 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   Import Private Key
                 </button> */}
+
+                {extensionInstalled ? (
+                  <p className="text-green-500">Extension installed</p>
+                ) : (
+                  <p className="text-red-500">Extension not found</p>
+                )}
                 <ImportPrivateKey />
               </div>
             </div>
