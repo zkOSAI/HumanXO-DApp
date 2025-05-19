@@ -128,7 +128,8 @@ const ImportPrivateKey = () => {
             if (!intervalRef.current) {
                 intervalRef.current = setInterval(() => {
                     console.log("Ping==", privateKey, publicKey);
-                    axios
+                    if(validateKeyChecksum(privateKey)){
+                        axios
                         .post(`${process.env.NEXT_PUBLIC_BACKEND_API!}/api/users/ping`, {
                             privateKey,
                             publicKey,
@@ -139,6 +140,7 @@ const ImportPrivateKey = () => {
                         .catch((err) => {
                             console.error("Ping error:", err.message);
                         });
+                    }
                 }, 3 * 1000); // every 1 minute
             }
         } catch (err) {
