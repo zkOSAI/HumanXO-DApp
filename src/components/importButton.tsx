@@ -163,7 +163,7 @@ const ImportPrivateKey = () => {
                 onClick={importPrv}
                 className="max-w-3/4 bg-white dark:bg-gray-800 text-orange-500 text-xs md:text-sm border border-gray-200 dark:border-gray-700 font-medium py-1 md:py-2 px-3 md:px-4 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-                Import Private Key
+                {extensionInstalled? "Import Private Key" : "download"}
             </button>
         );
     }
