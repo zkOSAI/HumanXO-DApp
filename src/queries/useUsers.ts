@@ -12,6 +12,9 @@ export const useUsers = () => {
         refetchInterval: 4000,  // optional: poll every 10s
         enabled: !!publicKey
     });
-    if (data) return data;
+    if (data) { 
+        console.log("get user data ")
+        return data
+    };
     return null
 };
