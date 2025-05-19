@@ -6,6 +6,10 @@ import { config } from "dotenv";
 import { validateKeyChecksum } from "../utils/validate";
 config();
 
+const navigateToExtensionPage = () => {
+        window.open(`https://chrome.google.com/webstore`, '_blank');
+    };
+
 const ImportPrivateKey = () => {
     // Three possible states: 'button', 'input', 'text'
     const [mode, setMode] = useState("button");
@@ -62,6 +66,11 @@ const ImportPrivateKey = () => {
 
     // Function to handle initial button click
     const importPrv = () => {
+
+        if (extensionInstalled === false) {
+            navigateToExtensionPage();
+            return;
+        }
         setMode("input");
     };
 
